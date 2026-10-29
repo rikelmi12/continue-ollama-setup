@@ -1,0 +1,189 @@
+name: Assistente Local Ollama
+version: 2.2.0
+schema: v1
+models:
+  - name: Qwen 2.5 Coder 3B Programacao (Ollama)
+    provider: ollama
+    model: qwen2.5-coder:3b
+    apiBase: http://127.0.0.1:11434
+    roles:
+      - chat
+      - edit
+      - apply
+    capabilities:
+      - tool_use
+    defaultCompletionOptions:
+      contextLength: 16384
+      maxTokens: 2048
+      temperature: 0.15
+      keepAlive: 300
+      reasoning: false
+  - name: Llama 3.2 3B Conversa e Ferramentas (Ollama)
+    provider: ollama
+    model: llama3.2:3b
+    apiBase: http://127.0.0.1:11434
+    roles:
+      - chat
+      - edit
+      - apply
+    capabilities:
+      - tool_use
+    defaultCompletionOptions:
+      contextLength: 16384
+      maxTokens: 1536
+      temperature: 0.2
+      keepAlive: 300
+      reasoning: false
+  - name: Qwen 2.5 Coder 0.5B Autocomplete Instantaneo (Ollama)
+    provider: ollama
+    model: qwen2.5-coder:0.5b
+    apiBase: http://127.0.0.1:11434
+    roles:
+      - autocomplete
+    defaultCompletionOptions:
+      contextLength: 2048
+      maxTokens: 128
+      temperature: 0.1
+      keepAlive: 300
+      reasoning: false
+    autocompleteOptions:
+      debounceDelay: 250
+      maxPromptTokens: 1024
+      modelTimeout: 3000
+      onlyMyCode: true
+      useCache: true
+      useImports: true
+      useRecentlyEdited: true
+      useRecentlyOpened: true
+  - name: Qwen 3 1.7B Rapido (Ollama)
+    provider: ollama
+    model: qwen3:1.7b
+    apiBase: http://127.0.0.1:11434
+    roles:
+      - chat
+      - edit
+      - apply
+    capabilities:
+      - tool_use
+    defaultCompletionOptions:
+      contextLength: 16384
+      maxTokens: 1024
+      temperature: 0.2
+      keepAlive: 300
+      reasoning: false
+    requestOptions:
+      extraBodyProperties:
+        think: false
+  - name: Gemma 3 4B Conversa e Visao (Ollama)
+    provider: ollama
+    model: gemma3:4b
+    apiBase: http://127.0.0.1:11434
+    roles:
+      - chat
+      - edit
+      - apply
+    capabilities:
+      - image_input
+    defaultCompletionOptions:
+      contextLength: 12288
+      maxTokens: 1536
+      temperature: 0.2
+      keepAlive: 300
+      reasoning: false
+  - name: Qwen 3.5 9B Completo Pesado (Ollama)
+    provider: ollama
+    model: qwen3.5:9b
+    apiBase: http://127.0.0.1:11434
+    roles:
+      - chat
+      - edit
+      - apply
+    capabilities:
+      - tool_use
+      - image_input
+    defaultCompletionOptions:
+      contextLength: 12288
+      maxTokens: 2048
+      temperature: 0.2
+      keepAlive: 0
+      reasoning: false
+    requestOptions:
+      extraBodyProperties:
+        think: false
+  - name: GPT OSS 20B Pesado (Ollama)
+    provider: ollama
+    model: gpt-oss:20b
+    apiBase: http://127.0.0.1:11434
+    roles:
+      - chat
+      - edit
+      - apply
+    capabilities:
+      - tool_use
+    defaultCompletionOptions:
+      contextLength: 4096
+      maxTokens: 512
+      temperature: 0.2
+      keepAlive: 0
+      reasoning: false
+    requestOptions:
+      extraBodyProperties:
+        think: low
+  - name: Embeddings Locais do Codigo (Continue)
+    provider: transformers.js
+    model: all-MiniLM-L6-v2
+    roles:
+      - embed
+  - name: Autodetect
+    provider: ollama
+    model: AUTODETECT
+    apiBase: http://127.0.0.1:11434
+context:
+  - provider: file
+  - provider: code
+  - provider: diff
+  - provider: problems
+  - provider: terminal
+  - provider: folder
+  - provider: codebase
+  - provider: docs
+  - provider: url
+  - provider: git
+docs:
+  - name: NestJS
+    startUrl: https://docs.nestjs.com
+    rootUrl: https://docs.nestjs.com
+  - name: TypeScript
+    startUrl: https://www.typescriptlang.org/docs/
+    rootUrl: https://www.typescriptlang.org/docs/
+  - name: PostgreSQL
+    startUrl: https://www.postgresql.org/docs/current/
+    rootUrl: https://www.postgresql.org/docs/current/
+  - name: React
+    startUrl: https://react.dev/reference/react
+    rootUrl: https://react.dev
+prompts:
+  - name: pesquisar
+    description: Pesquisar na web informacoes tecnicas recentes e documentacao
+    prompt: "Use a pesquisa web para encontrar documentacao oficial e solucoes atualizadas sobre: {{{ input }}}"
+  - name: testar
+    description: Gerar testes unitarios completos para o codigo
+    prompt: "Crie testes unitarios completos para o seguinte codigo, cobrindo cenarios felizes e casos de borda: {{{ input }}}"
+  - name: refatorar
+    description: Refatorar codigo focando em clareza, tipagem e performance
+    prompt: "Revise e refatore este codigo focando em legibilidade, tipagem estrita e boas praticas, preservando o comportamento original: {{{ input }}}"
+  - name: explicar
+    description: Explicar a arquitetura e logica do codigo selecionado
+    prompt: "Explique de forma didatica e estruturada como este codigo funciona, suas entradas, saidas e dependencias: {{{ input }}}"
+  - name: revisar
+    description: Realizar code review buscando bugs, seguranca e melhorias
+    prompt: "Faca uma revisao detalhada de codigo (code review) identificando potenciais bugs, falhas de seguranca, gargalos de performance e oportunidades de melhoria: {{{ input }}}"
+rules:
+  - Responda em portugues quando solicitado e nunca mostre pensamento interno ou tags <think>.
+  - Para o modo Agent, use preferencialmente o modelo Qwen 2.5 Coder 3B (ele tem suporte nativo superior a chamadas de ferramentas).
+  - Antes de editar, leia os arquivos relacionados; faca mudancas pequenas, preserve o estilo e informe os arquivos alterados.
+  - Modelos recomendados incluem Qwen 2.5 Coder 3B para codigo e Agent, Llama 3.2 3B para conversa, Qwen 2.5 Coder 0.5B para autocomplete instantaneo e Qwen 3.5 9B para tarefas complexas.
+  - Separe fatos, inferencias, premissas e conclusoes; confira calculos e declare incertezas relevantes.
+  - Em programacao, respeite versoes e padroes do projeto; confirme APIs, dependencias e comandos no codigo ou na documentacao atual.
+  - Para depuracao, identifique a causa raiz e crie ou atualize um teste que reproduza o problema quando for pratico.
+  - Depois de alterar codigo, execute as verificacoes relevantes e nunca afirme que um teste passou sem executa-lo.

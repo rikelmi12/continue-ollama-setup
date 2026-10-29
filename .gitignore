@@ -1,0 +1,27 @@
+# Pastas locais de memoria, sessoes e historico do Continue
+memory/
+memory-system/
+sessions/
+session_backups/
+dev_data/
+index/
+backups/
+.migrations/
+out/
+node_modules/
+
+# Logs, bancos locais e arquivos de dados
+*.log
+*.sqlite
+*.sqlite3
+*.db
+*.bak
+*.backup
+*.pre-upgrade
+.env
+.env.local
+
+# Arquivos do sistema operacional
+Thumbs.db
+Desktop.ini
+.DS_Store
